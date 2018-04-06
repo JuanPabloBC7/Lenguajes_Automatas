@@ -1,0 +1,8 @@
+/*voila all its perfectly ordered on finalarr*/
+
+/*here we just print the info but you can insert it into a database*/
+echo "customer: ".$finalarr[0]["customer"]."<br>";
+echo "item: ".$finalarr[0]["item"]."<br>";
+echo "customer: ".$finalarr[1]["customer"]."<br>";
+echo "item: ".$finalarr[1]["item"]."<br>";          
+?>
