@@ -6,14 +6,17 @@
 package PrimerProyecto;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -208,7 +211,7 @@ public class Interface extends javax.swing.JFrame {
                     BufferedReader BR = new BufferedReader(Lectura);
                     while((Salida = BR.readLine()) != null)
                     {
-                        PW.print(Salida.toLowerCase() + "\n");
+                        PW.print(Salida.toLowerCase() + "\r\n");
                     }
                 }
                 else
@@ -229,23 +232,55 @@ public class Interface extends javax.swing.JFrame {
         }
         Reader Read = new BufferedReader(new FileReader("Archivo.txt"));
         MiniPHP PHP = new MiniPHP(Read);
-        String TOKENS = "", ERRORES = "";
+        DefaultListModel TOKENS= new DefaultListModel();
+        DefaultListModel ERRORES= new DefaultListModel();
+        String TOKENS2 = "", ERRORES2 = "";
+        
+        String SalidaURL = Archivo.getPath();
+        SalidaURL = SalidaURL.split("\\.")[0];
+        FileWriter FW = new FileWriter(SalidaURL + "_MiniPHP.out");
+        FileWriter FW2 = new FileWriter(SalidaURL + "_MiniPHP_ERRORES.out");
+        BufferedWriter BW = new BufferedWriter(FW);
+        BufferedWriter BW2 = new BufferedWriter(FW2);
         while(true)
         {
             Token T = PHP.yylex();
             if(T == null)
             {
-                jTextArea1.setText(TOKENS);
-                jTextArea2.setText(ERRORES);
+                for (int i = 0; i < TOKENS.size(); i++) 
+                {
+                    jTextArea1.setText(TOKENS2);
+                    BW.write(TOKENS.getElementAt(i).toString());
+                    BW.newLine();
+                }
+                for (int i = 0; i < ERRORES.size(); i++) 
+                {
+                    jTextArea2.setText(ERRORES2);
+                    BW2.write(ERRORES.getElementAt(i).toString());
+                    BW2.newLine();
+                }
+                BW.close();
+                BW2.close();
                 return;
-            }
+            }            
             switch(T)
             {
                 case ERROR:
-                    ERRORES += "***-" + T + "-***" + ": \"" + PHP.Texto + "\", No perteneces a PHP\n";
+                    ERRORES.addElement("***-" + T + "-***" + ": \"" + PHP.Texto + "\", No perteneces a PHP En Linea: " + (ERRORES.getSize()+1));
+                    ERRORES2 += "***-" + T + "-***" + ": \"" + PHP.Texto + "\", No perteneces a PHP En Linea: " + (ERRORES.getSize()+1) + "\n\r";
+                    
                     break;
-                default:
-                    TOKENS += T + ": " + PHP.Texto + "\n";
+                 default:
+                    if(T == T.P_RESERVADA_DB)
+                    {
+                        TOKENS.addElement(T + ": " + PHP.Texto.toUpperCase());
+                        TOKENS2 += T + ": " + PHP.Texto.toUpperCase() + "\r\n";
+                    }
+                    else
+                    {
+                        TOKENS.addElement(T + ": " + PHP.Texto);
+                        TOKENS2 += T + ": " + PHP.Texto + "\r\n";
+                    }    
             }
         }
     }

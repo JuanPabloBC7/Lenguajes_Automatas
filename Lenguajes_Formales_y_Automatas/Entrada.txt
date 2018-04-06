@@ -1,8 +1,7 @@
-/*voila all its perfectly ordered on finalarr*/
-
-/*Here we just print the info but you can insert it into a database*/
+MySqL_lIsT_pRoCesses
 echo "Customer: ".$finalarr[0]["customer"]."<br>";
 echo "Item: ".$finalarr[0]["item"]."<br>";
 echo "Customer: ".$finalarr[1]["customer"]."<br>";
-echo "Item: ".$finalarr[1]["item"]."<br>";          
+echo "Item: ".$finalarr[1]["item"]."<br>";   
+       
 ?>
